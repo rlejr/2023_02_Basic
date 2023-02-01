@@ -6,16 +6,21 @@ public class Main {
 
 	public static void main(String[] args) {
 		System.out.println("==프로그램 시작==\n");
-		
+
 		Scanner sc = new Scanner(System.in);
-		
-		System.out.printf("명령어를 입력해주세요 : ");
-		String s = sc.nextLine();
-		
-		
-		System.out.printf("\n명령어 출력 : %s\n", s);
+
+		while (true) {
+			System.out.printf("명령어를 입력해주세요 : ");
+			String comand = sc.nextLine();
+
+			if (comand.equals("system exit")) {
+				break;
+			}
+
+		}
 
 		System.out.println("\n==프로그램 종료== ");
+
 		sc.close();
 	}
 
