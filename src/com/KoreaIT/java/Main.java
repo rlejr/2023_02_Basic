@@ -21,6 +21,66 @@ public class Main {
 
 			if (comand.startsWith("article detail")) {
 
+				if (comand.length() > 14) {
+					int i = 0;
+
+					String[] splitTitle = comand.split(" ");
+					String articleNumber = splitTitle[2];
+
+					if (isInteger(articleNumber)) {
+
+						if (Integer.parseInt(articleNumber) > 0) {
+							if (articles.size() >= Integer.parseInt(articleNumber)) {
+								i = Integer.parseInt(articleNumber);
+								Article articleDetail = articles.get(i - 1);
+								System.out.println("\n번호 : " + i);
+								System.out.println("날짜 : " + articleDetail.formatedNow);
+								System.out.println("제목 : " + articleDetail.title);
+								System.out.println("내용 : " + articleDetail.body);
+							} else {
+								System.out.println("\n" + Integer.parseInt(articleNumber) + "번 게시물은 존재하지 않습니다.");
+							}
+						} else {
+							System.out.println("\n" + Integer.parseInt(articleNumber) + "번 게시물은 존재하지 않습니다.");
+						}
+
+					} else {
+						System.out.println("\n번호를 뒤에 붙여주세요");
+					}
+				} else {
+					System.out.println("\n번호를 뒤에 붙여주세요");
+
+				}
+			} else if (comand.startsWith("article delete")) {
+
+				if (comand.length() > 14) {
+					int i = 0;
+
+					String[] splitTitle = comand.split(" ");
+					String articleNumber = splitTitle[2];
+
+					if (isInteger(articleNumber)) {
+
+						if (Integer.parseInt(articleNumber) > 0) {
+							if (articles.size() >= Integer.parseInt(articleNumber)) {
+								i = Integer.parseInt(articleNumber);
+								articles.remove(i - 1);
+								System.out.println("\n" + i + "번 게시물이 삭제 되었습니다");
+
+							} else {
+								System.out.println("\n" + Integer.parseInt(articleNumber) + "번 게시물은 존재하지 않습니다.");
+							}
+						} else {
+							System.out.println("\n" + Integer.parseInt(articleNumber) + "번 게시물은 존재하지 않습니다.");
+						}
+
+					} else {
+						System.out.println("\n번호를 뒤에 붙여주세요");
+					}
+				} else {
+					System.out.println("\n번호를 뒤에 붙여주세요");
+
+				}
 			}
 
 			else if (comand.equals("article list")) {
@@ -36,7 +96,7 @@ public class Main {
 				for (int i = (articles.size() - 1); i >= 0; i--) {
 					Article article = articles.get(i);
 					if (article.title.length() > 4) {
-						articleTitleLength = article.title.substring(1, 4);
+						articleTitleLength = article.title.substring(0, 4);
 						System.out.printf("\n%04d / %s\n", article.id, articleTitleLength);
 						continue;
 					}
@@ -74,6 +134,15 @@ public class Main {
 
 		sc.close();
 	}
+
+	static boolean isInteger(String strValue) {
+		try {
+			Integer.parseInt(strValue);
+			return true;
+		} catch (NumberFormatException ex) {
+			return false;
+		}
+	}
 }
 
 class Article {
@@ -88,4 +157,5 @@ class Article {
 		this.body = body;
 		this.formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 	}
+
 }
