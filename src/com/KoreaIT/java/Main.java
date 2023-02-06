@@ -33,8 +33,11 @@ public class Main {
 							if (articles.size() >= Integer.parseInt(articleNumber)) {
 								i = Integer.parseInt(articleNumber);
 								Article articleDetail = articles.get(i - 1);
+								articleDetail.views ++;
 								System.out.println("\n번호 : " + i);
-								System.out.println("날짜 : " + articleDetail.formatedNow);
+								System.out.println("작성일 : " + articleDetail.formatedNow);
+								System.out.println("최근 수정일 : " + articleDetail.modifyTime);
+								System.out.printf("조화수 : %d회\n", articleDetail.views);
 								System.out.println("제목 : " + articleDetail.title);
 								System.out.println("내용 : " + articleDetail.body);
 							} else {
@@ -82,6 +85,49 @@ public class Main {
 
 				}
 			}
+			else if (comand.startsWith("article modify")) {
+
+				if (comand.length() > 14) {
+					int i = 0;
+
+					String[] splitTitle = comand.split(" ");
+					String articleNumber = splitTitle[2];
+
+					if (isInteger(articleNumber)) {
+
+						if (Integer.parseInt(articleNumber) > 0) {
+							if (articles.size() >= Integer.parseInt(articleNumber)) {
+								i = Integer.parseInt(articleNumber);
+								Article articleModify = articles.get(i - 1);
+								LocalDateTime modifyTime = LocalDateTime.now();
+								articleModify.modifyTime = modifyTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+								System.out.println("\n" + i + "번 글을 수정합니다.");
+								System.out.printf("\n제목 : ");
+
+								String title = sc.nextLine();
+
+								System.out.printf("\n내용 : ");
+
+								String body = sc.nextLine();
+								articleModify.title = title;
+								articleModify.body = body;
+								
+
+							} else {
+								System.out.println("\n" + Integer.parseInt(articleNumber) + "번 게시물은 존재하지 않습니다.");
+							}
+						} else {
+							System.out.println("\n" + Integer.parseInt(articleNumber) + "번 게시물은 존재하지 않습니다.");
+						}
+
+					} else {
+						System.out.println("\n번호를 뒤에 붙여주세요");
+					}
+				} else {
+					System.out.println("\n번호를 뒤에 붙여주세요");
+
+				}
+			}
 
 			else if (comand.equals("article list")) {
 				if (articles.size() == 0) {
@@ -91,16 +137,16 @@ public class Main {
 
 				}
 				System.out.println("\n게시글이 있습니다.");
-				System.out.println("\n번호 / 제목");
+				System.out.println("\n번호 / 제목    / 조회수");
 				String articleTitleLength = null;
 				for (int i = (articles.size() - 1); i >= 0; i--) {
 					Article article = articles.get(i);
 					if (article.title.length() > 4) {
 						articleTitleLength = article.title.substring(0, 4);
-						System.out.printf("\n%04d / %s\n", article.id, articleTitleLength);
+						System.out.printf("\n%04d / %s... / %d\n", article.id, articleTitleLength, article.views);
 						continue;
 					}
-					System.out.printf("\n%04d / %s\n", article.id, article.title);
+					System.out.printf("\n%04d / %s     / %d\n", article.id, article.title, article.views);
 
 				}
 			}
@@ -110,6 +156,7 @@ public class Main {
 
 			} else if (comand.equals("article write")) {
 				int id = lastArticleId + 1;
+				int views = 0;
 				System.out.printf("\n제목 : ");
 
 				String title = sc.nextLine();
@@ -118,7 +165,7 @@ public class Main {
 
 				String body = sc.nextLine();
 				LocalDateTime now = LocalDateTime.now();
-				Article article = new Article(id, title, body, now);
+				Article article = new Article(id, now, title, body, views);
 				articles.add(article);
 
 				System.out.println("\n" + id + "번 글이 생성 되었습니다.");
@@ -147,15 +194,18 @@ public class Main {
 
 class Article {
 	int id;
+	int views;
+	String formatedNow;
 	String title;
 	String body;
-	String formatedNow;
+	String modifyTime = "없음";
 
-	Article(int id, String title, String body, LocalDateTime now) {
+	Article(int id,LocalDateTime now, String title, String body, int views) {
 		this.id = id;
+		this.formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 		this.title = title;
 		this.body = body;
-		this.formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		this.views = views;
 	}
 
 }
